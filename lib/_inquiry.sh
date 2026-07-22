@@ -198,6 +198,10 @@ software_dominio() {
   configurar_dominio
 }
 
+software_limpeza() {
+  system_limpeza_geral
+}
+
 inquiry_options() {
   
   print_banner
@@ -209,33 +213,39 @@ inquiry_options() {
   printf "   [3] Bloquear whaticket\n"
   printf "   [4] Desbloquear whaticket\n"
   printf "   [5] Alter. dominio whaticket\n"
+  printf "   [6] Limpeza geral do servidor\n"
   printf "\n"
   read -p "> " option
 
   case "${option}" in
     0) get_urls ;;
 
-    1) 
-      software_update 
+    1)
+      software_update
       exit
       ;;
 
-    2) 
-      software_delete 
+    2)
+      software_delete
       exit
       ;;
-    3) 
-      software_bloquear 
+    3)
+      software_bloquear
       exit
       ;;
-    4) 
-      software_desbloquear 
+    4)
+      software_desbloquear
       exit
       ;;
-    5) 
-      software_dominio 
+    5)
+      software_dominio
       exit
-      ;;        
+      ;;
+
+    6)
+      software_limpeza
+      exit
+      ;;
 
     *) exit ;;
   esac

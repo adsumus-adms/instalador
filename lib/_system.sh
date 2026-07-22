@@ -515,6 +515,44 @@ EOF
 }
 
 #######################################
+# performs general server cleanup to
+# free disk space and improve performance
+# Arguments:
+#   None
+#######################################
+system_limpeza_geral() {
+  print_banner
+  printf "${WHITE} 💻 Iniciando limpeza geral do servidor...${GRAY_LIGHT}"
+  printf "\n\n"
+
+  sleep 2
+
+  sudo su - root <<EOF
+  apt-get autoremove -y
+  apt-get autoclean -y
+  apt-get clean -y
+  journalctl --vacuum-time=7d
+  find /tmp -type f -atime +7 -delete
+  docker system prune -f
+EOF
+
+  sleep 2
+
+  sudo su - deploy <<EOF
+  pm2 flush
+  npm cache clean --force
+EOF
+
+  sleep 2
+
+  print_banner
+  printf "${WHITE} 💻 Limpeza geral do servidor realizada com sucesso ...${GRAY_LIGHT}"
+  printf "\n\n"
+
+  sleep 2
+}
+
+#######################################
 # installs nginx
 # Arguments:
 #   None
