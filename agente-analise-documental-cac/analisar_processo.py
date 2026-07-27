@@ -7,6 +7,12 @@ API da Claude junto com o checklist e os critérios de validade, e gera um
 relatório (Markdown) com o status do processo: COMPLETO_E_VALIDO, PENDENTE
 ou COM_ERRO.
 
+Quando o processo é classificado como COMPLETO_E_VALIDO, o script também
+monta a pasta final pronta para protocolo no SINARM CAC: copia cada
+documento (já identificado e validado) para uma subpasta, renomeado e
+numerado na ordem do checklist (ex: 01_laudo_de_tiro.pdf,
+02_certidao_federal.pdf, ...).
+
 Uso:
     python analisar_processo.py "/caminho/para/Cliente - CR" --tipo CR
 
@@ -25,7 +31,10 @@ import datetime
 import json
 import mimetypes
 import os
+import re
+import shutil
 import sys
+import unicodedata
 
 from checklist import NOMES_TIPO, identificar_tipo_processo, obter_checklist
 from prompt_motor_central import SYSTEM_PROMPT
@@ -54,6 +63,15 @@ def parse_args():
     parser.add_argument(
         "--saida",
         help="Caminho do relatório de saída (padrão: RELATORIO_ANALISE.md dentro da própria pasta).",
+    )
+    parser.add_argument(
+        "--pasta-final",
+        dest="pasta_final",
+        help=(
+            "Pasta onde montar os documentos organizados e numerados quando o "
+            "processo estiver COMPLETO_E_VALIDO (padrão: PRONTO_PARA_PROTOCOLAR "
+            "dentro da pasta analisada)."
+        ),
     )
     parser.add_argument("--model", default=MODELO_PADRAO, help=f"Modelo Claude a usar (padrão: {MODELO_PADRAO})")
     return parser.parse_args()
@@ -162,7 +180,47 @@ def chamar_motor_central(tipo, checklist_docs, blocos_arquivos, model):
         )
 
 
-def gerar_relatorio(resultado, tipo, cliente, pasta):
+def slugificar(texto):
+    texto = unicodedata.normalize("NFKD", texto)
+    texto = "".join(c for c in texto if not unicodedata.combining(c))
+    texto = re.sub(r"[^a-zA-Z0-9]+", "_", texto).strip("_").lower()
+    return texto
+
+
+def montar_pasta_final(resultado, checklist_docs, pasta_origem, pasta_final):
+    """Copia os documentos já validados para `pasta_final`, renomeados e
+    numerados na ordem do checklist (ordem do POP - DOCUMENTAÇÕES, seção 2).
+
+    Retorna a lista de nomes de arquivo criados em `pasta_final`.
+    """
+    os.makedirs(pasta_final, exist_ok=True)
+    por_nome = {doc.get("nome_documento"): doc for doc in resultado.get("documentos", [])}
+
+    copiados = []
+    for i, nome_doc in enumerate(checklist_docs, start=1):
+        doc = por_nome.get(nome_doc)
+        arquivo_correspondente = doc.get("arquivo_correspondente") if doc else None
+        if not arquivo_correspondente:
+            print(f"Aviso: nenhum arquivo correspondente a '{nome_doc}' — pulando na pasta final.")
+            continue
+
+        origem = os.path.join(pasta_origem, arquivo_correspondente)
+        if not os.path.isfile(origem):
+            print(
+                f"Aviso: arquivo '{arquivo_correspondente}' (indicado para '{nome_doc}') "
+                "não encontrado na pasta de origem — pulando na pasta final."
+            )
+            continue
+
+        _, ext = os.path.splitext(arquivo_correspondente)
+        destino_nome = f"{i:02d}_{slugificar(nome_doc)}{ext.lower()}"
+        shutil.copy2(origem, os.path.join(pasta_final, destino_nome))
+        copiados.append(destino_nome)
+
+    return copiados
+
+
+def gerar_relatorio(resultado, tipo, cliente, pasta, pasta_final=None, arquivos_pasta_final=None):
     linhas = []
     linhas.append(f"# Relatório de análise documental — {NOMES_TIPO[tipo]}")
     linhas.append("")
@@ -184,6 +242,16 @@ def gerar_relatorio(resultado, tipo, cliente, pasta):
             )
         )
     linhas.append("")
+
+    if pasta_final:
+        linhas.append("## Pasta pronta para protocolo")
+        linhas.append("")
+        linhas.append(f"**Local:** {pasta_final}")
+        linhas.append("")
+        for nome_arquivo in arquivos_pasta_final or []:
+            linhas.append(f"- {nome_arquivo}")
+        linhas.append("")
+
     linhas.append("## Mensagem para o cliente")
     linhas.append("")
     linhas.append(resultado.get("mensagem_cliente", ""))
@@ -206,7 +274,13 @@ def main():
     blocos_arquivos = montar_blocos_arquivos(caminhos_arquivos)
     resultado = chamar_motor_central(tipo, checklist_docs, blocos_arquivos, args.model)
 
-    relatorio = gerar_relatorio(resultado, tipo, args.cliente, pasta)
+    pasta_final = None
+    arquivos_pasta_final = []
+    if resultado.get("status_processo") == "COMPLETO_E_VALIDO":
+        pasta_final = os.path.abspath(args.pasta_final or os.path.join(pasta, "PRONTO_PARA_PROTOCOLAR"))
+        arquivos_pasta_final = montar_pasta_final(resultado, checklist_docs, pasta, pasta_final)
+
+    relatorio = gerar_relatorio(resultado, tipo, args.cliente, pasta, pasta_final, arquivos_pasta_final)
     saida = args.saida or os.path.join(pasta, "RELATORIO_ANALISE.md")
     with open(saida, "w", encoding="utf-8") as f:
         f.write(relatorio)
@@ -214,6 +288,8 @@ def main():
     print()
     print(f"Status do processo: {resultado.get('status_processo', 'DESCONHECIDO')}")
     print(f"Relatório salvo em: {saida}")
+    if pasta_final:
+        print(f"Pasta pronta para protocolo: {pasta_final} ({len(arquivos_pasta_final)} arquivo(s))")
 
 
 if __name__ == "__main__":

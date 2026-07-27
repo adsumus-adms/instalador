@@ -63,6 +63,13 @@ caminho passado em `--saida`), com:
 - Uma mensagem pronta para ser enviada ao cliente com o que falta ou precisa
   ser corrigido.
 
+Quando o processo é classificado como `COMPLETO_E_VALIDO`, o script também
+monta a **pasta pronta para protocolo**: copia cada documento (sem alterar o
+original) para uma subpasta `PRONTO_PARA_PROTOCOLAR/` dentro da pasta
+analisada, renomeado e numerado na ordem do checklist — ex:
+`01_laudo_de_tiro.pdf`, `02_certidao_federal.pdf` — pronta para upload
+individual no SINARM. Use `--pasta-final` para escolher outro destino.
+
 ## Arquivos
 
 - `analisar_processo.py` — script principal (CLI).
@@ -75,6 +82,5 @@ caminho passado em `--saida`), com:
 
 - O agente nunca aprova um documento em caso de dúvida — classifica como
   `COM_ERRO` e explica a dúvida, para revisão humana.
-- Organização automática da pasta final pronta para protocolo (renomear e
-  numerar os arquivos na ordem do SINARM) ainda não está implementada — por
-  ora o script só gera o relatório de status.
+- A pasta pronta para protocolo é sempre gerada localmente (não há
+  integração com Google Drive ou Trello neste script).
