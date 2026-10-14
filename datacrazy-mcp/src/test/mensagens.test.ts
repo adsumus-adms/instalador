@@ -20,9 +20,12 @@ async function setup(extraEnv: Record<string, string> = {}) {
       res.writeHead(200, { "content-type": "application/json" });
       if (req.url!.startsWith("/api/v1/conversations?")) {
         // só devolve as conversas com mensagem do cliente nas últimas 24h, como o filtro openWindow=last24h
-        res.end(JSON.stringify({ count: 2, data: [
-          { id: "C1", name: "Maria", contact: { id: "5583999990001" }, lastReceivedMessageDate: hoursAgo(1) },
-          { id: "C3", name: "Joao", contact: { id: "5583999990003" }, lastReceivedMessageDate: hoursAgo(30) }, // data velha mesmo listada
+        res.end(JSON.stringify({ count: 4, data: [
+          // formato real da API: contact.id é ID interno; o telefone está em phoneNumber/contactId
+          { id: "C1", name: "Maria", contact: { id: "int1", phoneNumber: "5583999990001", contactId: "5583999990001", platform: "WHATSAPP" }, instance: { name: "ADSUMUS_3977", platform: "WHATSAPP", config: { phoneNumber: "+55 83 9980-3977" } }, lastReceivedMessageDate: hoursAgo(1) },
+          { id: "C3", name: "Joao", contact: { id: "int3", phoneNumber: "5583999990003", platform: "WHATSAPP" }, instance: { platform: "WHATSAPP" }, lastReceivedMessageDate: hoursAgo(30) }, // data velha mesmo listada
+          { id: "CI", name: "Ana", contact: { id: "int4", platform: "INSTAGRAM" }, instance: { platform: "INSTAGRAM" }, lastReceivedMessageDate: hoursAgo(1) },
+          { id: "CG", name: "Grupo", isGroup: true, contact: { id: "int5", platform: "WHATSAPP" }, instance: { platform: "WHATSAPP" }, lastReceivedMessageDate: hoursAgo(1) },
         ] }));
       } else if (req.method === "POST" && req.url!.endsWith("/messages")) {
         res.end(JSON.stringify({ id: "M1", status: "SENT", body: "eco" }));
@@ -71,6 +74,8 @@ test("fluxo em dois passos: preparar não envia; enviar só com código, convers
   assert.match(prep.codigo, /^[0-9a-f]{6}$/);
   assert.equal(prep.texto, texto, "texto completo no preview");
   assert.equal(prep.destinatario.nome, "Maria");
+  assert.equal(prep.destinatario.telefone, "5583999990001", "mostra o telefone, não o ID interno");
+  assert.deepEqual(prep.enviadoPor, { conexao: "ADSUMUS_3977", numero: "+55 83 9980-3977" });
   assert.equal(prep.janela24h.aberta, true);
   assert.equal(posts(seen).length, 0, "preparar não envia nada");
   assert.match(decodeURIComponent(seen[0].url), /filter\[openWindow\]=last24h/);
@@ -116,6 +121,18 @@ test("janela fechada ou não confirmada: nenhum código é gerado", async () => 
   const desconhecida = await call("preparar_mensagem", { conversationId: "C404", body: "oi" });
   assert.ok(desconhecida.isError);
   assert.match(desconhecida.content[0].text, /NÃO confirmada/);
+  assert.equal(posts(seen).length, 0);
+  await close();
+});
+
+test("Instagram e grupos são recusados mesmo dentro da janela", async () => {
+  const { seen, call, close } = await setup({ DATACRAZY_PERMITIR_ENVIO: "1" });
+  const ig = await call("preparar_mensagem", { conversationId: "CI", body: "oi" });
+  assert.ok(ig.isError);
+  assert.match(ig.content[0].text, /INSTAGRAM.*Só é permitido enviar por WhatsApp/);
+  const grupo = await call("preparar_mensagem", { conversationId: "CG", body: "oi" });
+  assert.ok(grupo.isError);
+  assert.match(grupo.content[0].text, /grupo/);
   assert.equal(posts(seen).length, 0);
   await close();
 });

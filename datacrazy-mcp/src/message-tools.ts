@@ -9,7 +9,7 @@ import { apiRequest, DatacrazyError } from "./client.js";
 const TTL_MS = 15 * 60_000;
 const JANELA_MS = 24 * 3600_000;
 const PAGINA = 50;
-const MAX_PAGINAS = 5;
+const MAX_PAGINAS = 10;
 const maxPorHora = () => Number(process.env.DATACRAZY_MAX_ENVIOS_POR_HORA) || 20;
 
 const id = z.string().regex(/^[A-Za-z0-9_-]{1,64}$/, "ID inválido");
@@ -56,7 +56,14 @@ export class DraftStore {
 
 export const store = new DraftStore();
 
-interface ConversaResumo { id: string; name?: string; lastReceivedMessageDate?: string; contact?: { id?: string } }
+interface ConversaResumo {
+  id: string;
+  name?: string;
+  isGroup?: boolean;
+  lastReceivedMessageDate?: string;
+  contact?: { phoneNumber?: string; contactId?: string; platform?: string };
+  instance?: { name?: string; platform?: string; config?: { phoneNumber?: string } };
+}
 
 /** Procura a conversa entre as que receberam mensagem do cliente nas últimas 24h (filtro openWindow=last24h). */
 async function localizarConversaNaJanela(conversationId: string): Promise<ConversaResumo | null> {
@@ -78,6 +85,10 @@ export async function prepararMensagem(a: { conversationId: string; body: string
         "Fora da janela o WhatsApp oficial só aceita template aprovado, e a API do Datacrazy não envia template. Nenhum código foi gerado. " +
         "Use o template direto no Datacrazy, ou espere o cliente escrever.",
     );
+  if (conv.isGroup) throw new DatacrazyError("Esta conversa é um grupo. Envio a grupos não é permitido por aqui. Nenhum código foi gerado.");
+  const plataforma = conv.contact?.platform ?? conv.instance?.platform;
+  if (plataforma !== "WHATSAPP")
+    throw new DatacrazyError(`Esta conversa é de ${plataforma ?? "canal desconhecido"}. Só é permitido enviar por WhatsApp (a janela de 24h conferida aqui é a do WhatsApp). Nenhum código foi gerado.`);
   const ultima = Date.parse(conv.lastReceivedMessageDate ?? "");
   if (!Number.isFinite(ultima) || now - ultima >= JANELA_MS)
     throw new DatacrazyError("Janela de 24h fechada (a última mensagem do cliente tem mais de 24h). Nenhum código foi gerado.");
@@ -85,7 +96,9 @@ export async function prepararMensagem(a: { conversationId: string; body: string
   return {
     codigo,
     validoPorMinutos: TTL_MS / 60_000,
-    destinatario: { nome: conv.name ?? "(sem nome)", contato: conv.contact?.id ?? "(não informado)" },
+    // O telefone aparece para o usuário conferir o destinatário (contact.id da API é um ID interno, não o telefone).
+    destinatario: { nome: conv.name ?? "(sem nome)", telefone: conv.contact?.phoneNumber ?? conv.contact?.contactId ?? "(não informado)" },
+    enviadoPor: { conexao: conv.instance?.name ?? "(desconhecida)", numero: conv.instance?.config?.phoneNumber ?? "(não informado)" },
     texto: a.body,
     janela24h: { aberta: true, ultimaMensagemDoCliente: new Date(ultima).toISOString(), fechaEm: new Date(ultima + JANELA_MS).toISOString() },
     proximoPasso:
