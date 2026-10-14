@@ -16,6 +16,11 @@ async function run(fn: () => Promise<unknown>): Promise<Result> {
     const data = summarize(await fn());
     return { content: [{ type: "text", text: JSON.stringify(data, null, 1) }] };
   } catch (e) {
+    // Causa técnica só no stderr (código do erro, sem URL nem dados de clientes) para facilitar o diagnóstico.
+    if (!(e instanceof DatacrazyError)) {
+      const err = e as { name?: string; code?: string; cause?: { code?: string } };
+      console.error(`datacrazy-mcp: falha de rede (${err.name ?? "Error"} ${err.cause?.code ?? err.code ?? ""})`);
+    }
     const msg = e instanceof DatacrazyError ? e.message : "Falha ao consultar a API do Datacrazy.";
     return { isError: true, content: [{ type: "text", text: msg }] };
   }

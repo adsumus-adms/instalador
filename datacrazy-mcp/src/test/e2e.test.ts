@@ -121,3 +121,12 @@ test("DATACRAZY_SOMENTE_LEITURA=1 remove as ferramentas de escrita", async () =>
   assert.ok(!tools.some((t) => t.annotations?.readOnlyHint === false));
   await close();
 });
+
+test("DATACRAZY_AUTH_VIA_PROXY=1: não envia Authorization e dispensa a chave", async () => {
+  const { seen, client, close } = await setup({ DATACRAZY_AUTH_VIA_PROXY: "1", DATACRAZY_API_KEY: "" });
+  const r: any = await client.callTool({ name: "buscar_tags", arguments: {} });
+  assert.ok(!r.isError);
+  assert.equal(seen.length, 1);
+  assert.equal(seen[0].auth, undefined);
+  await close();
+});

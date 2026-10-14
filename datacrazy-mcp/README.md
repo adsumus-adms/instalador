@@ -28,6 +28,14 @@ claude mcp add datacrazy --scope user -e DATACRAZY_API_KEY="$DATACRAZY_API_KEY" 
 Depois rode `/mcp` no Claude Code: o servidor `datacrazy` deve aparecer conectado.
 Teste: "liste os 5 leads mais recentes do Datacrazy".
 
+## Uso na nuvem (Claude Code na web), sem instalar nada
+
+A chave fica num **segredo de rede** do ambiente (Bearer, `Authorization`, site `api.g1.datacrazy.io`) e o proxy a injeta nas chamadas. O MCP não vê a chave: `DATACRAZY_AUTH_VIA_PROXY=1` faz ele não enviar o cabeçalho.
+
+- `nuvem.sh` instala, compila e sobe o servidor com as variáveis certas (`NODE_USE_ENV_PROXY=1`, necessário para o `fetch` do Node usar o proxy). O `.mcp.json` na raiz do repositório o registra em modo **somente leitura**.
+- Sem o MCP carregado, qualquer sessão consulta direto: `node scripts/consultar.mjs buscar_leads '{"take":5}'`.
+- Para liberar escrita na nuvem, remova `DATACRAZY_SOMENTE_LEITURA` do `.mcp.json`.
+
 ## Ferramentas (Fase 1)
 
 | Ferramenta | O que faz |

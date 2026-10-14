@@ -7,10 +7,15 @@ export type Query = Record<string, string | number | boolean | undefined | Recor
 
 export class DatacrazyError extends Error {}
 
-function apiKey(): string {
+// Na nuvem (Claude Code na web) a chave fica num segredo de rede do ambiente e o proxy a injeta
+// no cabeçalho Authorization. Nesse modo o MCP não envia (nem precisa conhecer) a chave.
+const AUTH_VIA_PROXY = ["1", "true"].includes((process.env.DATACRAZY_AUTH_VIA_PROXY ?? "").toLowerCase());
+
+function authHeaders(): Record<string, string> {
+  if (AUTH_VIA_PROXY) return {};
   const key = process.env.DATACRAZY_API_KEY;
   if (!key) throw new DatacrazyError("Variável de ambiente DATACRAZY_API_KEY não definida.");
-  return key;
+  return { Authorization: `Bearer ${key}` };
 }
 
 /** Monta a query string. Objetos viram `chave[sub]=valor` (ex.: filter[tags]=...). */
@@ -40,7 +45,7 @@ export async function apiRequest(method: Method, path: string, query: Query = {}
     const res = await fetch(url, {
       method,
       headers: {
-        Authorization: `Bearer ${apiKey()}`,
+        ...authHeaders(),
         Accept: "application/json",
         ...(body !== undefined ? { "Content-Type": "application/json" } : {}),
       },
