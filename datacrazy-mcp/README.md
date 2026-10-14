@@ -1,7 +1,7 @@
 # datacrazy-mcp
 
 Servidor MCP (stdio) que conecta o Claude Code direto à API do CRM Datacrazy.
-**Fases 1 e 2: leitura e escrita no CRM.** Não há ferramentas de exclusão, de anexos nem de envio de mensagens (Fase 3, ainda não implementada).
+**Fases 1 e 2: leitura e escrita no CRM.** Não há ferramentas de exclusão nem de anexos. A Fase 3 (envio de mensagens) existe, mas vem **desligada** até você ativá-la (ver abaixo).
 
 ## Instalação
 
@@ -83,6 +83,30 @@ claude mcp add datacrazy --scope user -e DATACRAZY_API_KEY="$DATACRAZY_API_KEY" 
 npm run build && npm test
 ```
 
-## Próxima fase
+## Mensagens ao cliente (Fase 3) — desligada por padrão
 
-3. Mensagens (enviar mensagem para uma conversa, finalizar atendimento), com confirmação em cada envio e respeitando a janela de 24h e os templates da Meta.
+A mensagem **sai de verdade pelo WhatsApp e não dá para desfazer**. Por isso só existe com `DATACRAZY_PERMITIR_ENVIO=1` (e nunca junto de `DATACRAZY_SOMENTE_LEITURA=1`, que sempre vence).
+
+| Ferramenta | O que faz |
+|---|---|
+| `preparar_mensagem` | Passo 1. **Não envia.** Confere a janela de 24h, mostra destinatário e texto exatos e devolve um código |
+| `enviar_mensagem` | Passo 2. Envia, só com o código + a mesma conversa + o mesmo texto |
+| `finalizar_atendimento` | Finaliza a conversa (exige `confirmar: true`; pode disparar automações, ex.: pesquisa de satisfação) |
+
+Travas no código, não só na descrição:
+- **Dois passos obrigatórios.** O código é de uso único, vale 15 min e é amarrado à conversa e ao texto. Qualquer diferença recusa o envio e queima o código.
+- **Janela de 24h.** A conversa precisa estar entre as que receberam mensagem do cliente nas últimas 24h (filtro `openWindow=last24h`) e a data da última mensagem é conferida de novo. Fora da janela ou sem confirmar, nem gera código. A API do Datacrazy só aceita texto livre, **não envia template da Meta**: fora da janela use o template direto no Datacrazy.
+- **Uma conversa por chamada, só texto** (sem anexos, sem agendamento, sem nota interna). Máx. 1000 caracteres.
+- **Limite de 20 envios por hora** (`DATACRAZY_MAX_ENVIOS_POR_HORA` ajusta). Evita laço descontrolado.
+- Se a chamada falhar sem resposta clara, o resultado vem como **incerto**: confira a conversa antes de reenviar.
+- O Claude Code ainda pede sua confirmação em cada chamada de `enviar_mensagem`, e ela mostra o texto e a conversa.
+
+Para ligar no Claude Code local, registre assim (sem `DATACRAZY_SOMENTE_LEITURA`):
+
+```bash
+claude mcp add datacrazy --scope user -e DATACRAZY_API_KEY='...' -e DATACRAZY_PERMITIR_ENVIO=1 -- node /caminho/absoluto/datacrazy-mcp/dist/index.js
+```
+
+Na nuvem, edite o `.mcp.json` da raiz: troque `"DATACRAZY_SOMENTE_LEITURA": "1"` por `"DATACRAZY_PERMITIR_ENVIO": "1"`.
+
+Limites conhecidos: não testado contra o WhatsApp real (só contra API simulada). Não há como enviar template ou anexo por esta API/ferramenta. Não use para disparo em massa ou marketing (regras da Meta).

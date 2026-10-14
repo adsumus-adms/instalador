@@ -9,4 +9,5 @@ Em sessões na nuvem, o acesso à API do Datacrazy já está configurado no ambi
   (na primeira vez rode `npm ci && npm run build`; o fetch precisa de `NODE_USE_ENV_PROXY=1`, que o script já define).
 - Limites da API: 60 req/min por rota, 20 req/min em conversas.
 - Dados de clientes (nome, telefone, conversas): mostrar só o necessário e nunca gravar em arquivos do repositório.
-- Escrita no CRM só quando o usuário pedir e confirmar; nunca enviar mensagens a clientes sem confirmação explícita.
+- Escrita no CRM só quando o usuário pedir e confirmar.
+- Mensagens a clientes (só existem com `DATACRAZY_PERMITIR_ENVIO=1`): sempre `preparar_mensagem` primeiro, mostre ao usuário o destinatário e o texto EXATOS e só chame `enviar_mensagem` depois de um "sim" explícito dele para aquele envio. Nunca reutilize uma aprovação para outro texto ou outra conversa, nunca envie em lote, nunca envie por conta própria. Se a janela de 24h estiver fechada, não há como enviar por aqui (a API não envia template): avise o usuário.
