@@ -1,7 +1,7 @@
 # datacrazy-mcp
 
 Servidor MCP (stdio) que conecta o Claude Code direto à API do CRM Datacrazy.
-**Fase 1: somente leitura.** Não há ferramentas de escrita, exclusão ou envio de mensagens.
+**Fases 1 e 2: leitura e escrita no CRM.** Não há ferramentas de exclusão, de anexos nem de envio de mensagens (Fase 3, ainda não implementada).
 
 ## Instalação
 
@@ -40,12 +40,33 @@ Teste: "liste os 5 leads mais recentes do Datacrazy".
 | `buscar_conversas`, `mensagens_da_conversa` | Conversas (limite da API: 20 req/min) |
 | `buscar_atendentes_crm`, `buscar_atendentes_multiatendimento`, `buscar_instancias` | Atendentes e conexões |
 
+## Ferramentas de escrita (Fase 2)
+
+Todas começam com "ESCREVE NO CRM" na descrição e são marcadas como não somente leitura, então o Claude Code pede sua confirmação antes de cada uso. Nenhuma envia mensagem ao cliente.
+
+| Ferramenta | Efeito |
+|---|---|
+| `criar_lead`, `atualizar_lead` | Cria um lead / altera só os campos informados (tags e listas podem substituir as atuais) |
+| `adicionar_comentario_ao_lead` | Nota interna no lead |
+| `criar_atividade`, `atualizar_atividade` | Tarefa vinculada a um lead |
+| `criar_negocio`, `atualizar_negocio` | Negócio em uma etapa do funil |
+| `mover_negocios` | Muda a etapa (pode disparar automações da etapa de destino) |
+| `ganhar_negocios`, `perder_negocios`, `restaurar_negocios` | Fecha como ganho / perdido (com motivo) / reabre |
+
+Limites de segurança: no máximo 20 negócios por chamada, IDs validados, entradas inválidas são recusadas antes de chamar a API.
+
+Para usar só leitura, defina `DATACRAZY_SOMENTE_LEITURA=1` (as ferramentas de escrita nem são registradas):
+
+```bash
+claude mcp add datacrazy --scope user -e DATACRAZY_API_KEY="$DATACRAZY_API_KEY" -e DATACRAZY_SOMENTE_LEITURA=1 -- node /caminho/absoluto/datacrazy-mcp/dist/index.js
+```
+
 ## Comportamento
 
 - `429`: espera o `Retry-After` (máx. 60 s) e tenta de novo, até 3 vezes.
 - Respostas resumidas: `take` padrão 10 (máx. 50), textos cortados em 300 caracteres, listas em 25 itens.
 - Filtros: objeto `filter` vira `filter[chave]=valor` (ver `essencials/use-filters` na documentação).
-- Mensagens de erro não incluem o corpo da resposta (pode ter dados de clientes).
+- Mensagens de erro não incluem o corpo da resposta (pode ter dados de clientes). Única exceção: em erro 4xx de escrita, mostra o `message` de validação da API (ex.: campo inválido), cortado em 300 caracteres.
 - `DATACRAZY_BASE_URL` (opcional) sobrescreve `https://api.g1.datacrazy.io`.
 
 ## Testes
@@ -54,7 +75,6 @@ Teste: "liste os 5 leads mais recentes do Datacrazy".
 npm run build && npm test
 ```
 
-## Próximas fases
+## Próxima fase
 
-2. Escrita no CRM (criar/atualizar leads, comentários, atividades; mover/ganhar/perder negócios).
-3. Mensagens (enviar mensagem, finalizar atendimento), com confirmação em cada envio e respeitando a janela de 24h/templates da Meta.
+3. Mensagens (enviar mensagem para uma conversa, finalizar atendimento), com confirmação em cada envio e respeitando a janela de 24h e os templates da Meta.

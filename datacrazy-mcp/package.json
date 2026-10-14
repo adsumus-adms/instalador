@@ -1,7 +1,7 @@
 {
   "name": "datacrazy-mcp",
-  "version": "0.1.0",
-  "description": "Servidor MCP (stdio) para a API do CRM Datacrazy - Fase 1: somente leitura",
+  "version": "0.2.0",
+  "description": "Servidor MCP (stdio) para a API do CRM Datacrazy - Fases 1 e 2: leitura e escrita no CRM",
   "type": "module",
   "main": "dist/index.js",
   "bin": {
