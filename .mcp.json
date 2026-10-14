@@ -3,7 +3,7 @@
     "datacrazy": {
       "command": "sh",
       "args": ["datacrazy-mcp/nuvem.sh"],
-      "env": { "DATACRAZY_SOMENTE_LEITURA": "1" }
+      "env": { "DATACRAZY_PERMITIR_ENVIO": "1" }
     }
   }
 }
