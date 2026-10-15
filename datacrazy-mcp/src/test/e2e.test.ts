@@ -85,6 +85,9 @@ test("escrita: método, rota e corpo corretos; ferramentas sinalizadas como não
   assert.ok(seen.every((s) => s.auth === "Bearer chave-teste"));
   assert.deepEqual(JSON.parse(seen[0].body), { name: "Fulano", phone: "5583999999999", attendant: { id: "att1" } });
   assert.deepEqual(JSON.parse(seen[1].body), { email: "a@b.com" }); // sem o id no corpo
+  await client.callTool({ name: "atualizar_lead", arguments: { id: "L1", tags: ["T1", "T2"], lists: ["LS1"] } });
+  assert.deepEqual(JSON.parse(seen[seen.length - 1].body), { tags: [{ id: "T1" }, { id: "T2" }], lists: [{ id: "LS1" }] }, "tags/listas no formato [{id}]");
+  seen.splice(seen.length - 1, 1); // mantém a ordem esperada abaixo
   assert.deepEqual(JSON.parse(seen[2].body), { note: "ligou" });
   assert.deepEqual(JSON.parse(seen[3].body), { title: "Retornar", lead: { id: "L1" }, activityType: { id: "T1" }, startDate: "2026-10-20T14:00:00.000Z", endDate: "2026-10-20T15:00:00.000Z" });
   assert.deepEqual(JSON.parse(seen[4].body), { ids: ["B1", "B2"], destinationStageId: "S2" });

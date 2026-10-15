@@ -35,10 +35,13 @@ export interface WriteToolDef {
 }
 
 function leadBody(a: Record<string, any>) {
-  const { attendantId, ...rest } = a;
+  const { attendantId, tags, lists, ...rest } = a;
   const body: Record<string, unknown> = { ...rest };
   delete body.id;
   if (attendantId) body.attendant = { id: attendantId };
+  // A API real espera [{ "id": "<uuid>" }]; uma lista de textos é aceita mas IGNORADA (confirmado em teste).
+  if (tags) body.tags = tags.map((id: string) => ({ id }));
+  if (lists) body.lists = lists.map((id: string) => ({ id }));
   return body;
 }
 
@@ -76,7 +79,7 @@ export const WRITE_TOOLS: WriteToolDef[] = [
   {
     name: "atualizar_lead",
     description:
-      "ESCREVE NO CRM: altera campos de um lead EXISTENTE (só os campos informados). Se enviar tags ou listas, a API pode substituir as atuais: leia o lead antes (buscar_lead_por_id) e envie a lista completa desejada.",
+      "ESCREVE NO CRM: altera campos de um lead EXISTENTE (só os campos informados). Se enviar tags (confirmado em teste real), SUBSTITUI o conjunto inteiro: leia o lead antes (buscar_lead_por_id) e envie a lista completa desejada; não enviar mantém as atuais e [] remove todas. Listas: presume-se o mesmo, não testado.",
     method: "PATCH",
     path: "/api/v1/leads/{id}",
     shape: { id, ...leadFields },
