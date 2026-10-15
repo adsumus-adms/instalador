@@ -61,7 +61,7 @@ Confira também: arma/grupo informados no lançamento versus o grupo da arma (pa
 
 ## Passo 4: Avaliar a exigência por grupo e ciclo
 
-Leia `references/exigencias.md`. Os mínimos por grupo ficam lá, e **só devem ser usados se estiverem preenchidos e com a norma citada**. Se a tabela estiver vazia, não invente números: apresente a contagem por ciclo e grupo, deixe o campo "cumpre?" como "a confirmar" e peça ao usuário a norma/valores.
+Leia `references/exigencias.md`. Regra atual: cada ciclo precisa de 8 treinamentos registrados. Para cada ciclo, informe quantos treinos estão confirmados nos três documentos, se cumpre os 8 e, no ciclo em aberto, quantos faltam. Não invente exigências além das que estão no arquivo.
 
 ## Saída: relatório de divergências
 

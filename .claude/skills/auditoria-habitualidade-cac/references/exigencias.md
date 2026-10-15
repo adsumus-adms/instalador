@@ -1,19 +1,9 @@
-# Exigências de habitualidade por grupo e ciclo
+# Exigências de habitualidade por ciclo
 
-> Preencher com a norma vigente. Enquanto estiver vazio, a skill apenas **conta** os dias por ciclo/grupo e marca "a confirmar".
+Regra informada pelo usuário: **cada ciclo precisa ter 8 (oito) treinamentos registrados**.
 
-Norma de referência: _(citar: ex. Portaria COLOG e artigo)_
-Data de conferência da norma: _(preencher)_
-
-| Grupo | Mínimo de dias/eventos por ciclo | Outras condições (meses distintos, tipo de evento etc.) |
-|---|---|---|
-| 1 | _(preencher)_ | |
-| 2 | _(preencher)_ | |
-| 3 | _(preencher)_ | |
-| 4 | _(preencher)_ | |
-| 5 | _(preencher)_ | |
-| 6 | _(preencher)_ | |
-
-Observações:
-- Definir se o mesmo dia pode valer para mais de um grupo/arma.
-- Definir se há tratamento diferente para o ciclo em aberto (BRAVO).
+- Vale para todos os grupos (1 a 6), até o usuário informar diferença.
+- Conte treinamentos registrados e validados nos três documentos (sistema, folha assinada e declaração). Treino que aparece só em um deles não conta como confirmado: aponte na divergência.
+- Ciclo em aberto (o atual): informe quantos treinos já há e quantos faltam para 8, sem concluir que não cumpre.
+- Pendente de confirmar com o usuário: se há exigência de meses distintos, tipo de evento, ou se o mesmo dia vale para mais de uma arma/grupo. Até lá, conte 1 treinamento por dia e registre a premissa no relatório.
+- Norma de referência (citar quando o usuário informar): _(preencher)_
