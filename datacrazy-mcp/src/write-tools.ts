@@ -125,7 +125,7 @@ export const WRITE_TOOLS: WriteToolDef[] = [
   },
   {
     name: "criar_negocio",
-    description: "ESCREVE NO CRM: cria um NOVO negócio para um lead, na etapa informada do funil (veja buscar_pipelines e etapas_do_pipeline).",
+    description: "ESCREVE NO CRM: cria um NOVO negócio para um lead, na etapa informada do funil (veja buscar_pipelines e etapas_do_pipeline). ATENÇÃO: ainda NÃO testada no Datacrazy real; confirme com o usuário e prefira testar antes com um negócio de teste.",
     method: "POST",
     path: "/api/v1/businesses",
     shape: { leadId: id, stageId: id.describe("Etapa do funil"), attendantId: id.optional(), externalId: z.string().max(100).optional() },
@@ -134,7 +134,7 @@ export const WRITE_TOOLS: WriteToolDef[] = [
   },
   {
     name: "atualizar_negocio",
-    description: "ESCREVE NO CRM: altera um negócio EXISTENTE (lead, etapa, atendente ou ID externo). Para mover de etapa prefira mover_negocios.",
+    description: "ESCREVE NO CRM: altera um negócio EXISTENTE (lead, etapa, atendente ou ID externo). Para mover de etapa prefira mover_negocios. ATENÇÃO: ainda NÃO testada no Datacrazy real; confirme com o usuário e prefira testar antes com um negócio de teste.",
     method: "PATCH",
     path: "/api/v1/businesses/{id}",
     shape: { id, leadId: id.optional(), stageId: id.optional(), attendantId: id.optional(), externalId: z.string().max(100).optional() },
@@ -144,7 +144,7 @@ export const WRITE_TOOLS: WriteToolDef[] = [
   },
   {
     name: "mover_negocios",
-    description: "ESCREVE NO CRM: move negócios para outra etapa do funil. Pode disparar automações configuradas na etapa de destino.",
+    description: "ESCREVE NO CRM: move negócios para outra etapa do funil. Pode disparar automações configuradas na etapa de destino. ATENÇÃO: ainda NÃO testada no Datacrazy real; confirme com o usuário e prefira testar antes com um negócio de teste.",
     method: "POST",
     path: "/api/v1/businesses/actions/move",
     shape: { ids, destinationStageId: id.describe("Etapa de destino") },
@@ -153,7 +153,7 @@ export const WRITE_TOOLS: WriteToolDef[] = [
   },
   {
     name: "ganhar_negocios",
-    description: "ESCREVE NO CRM: marca negócios como GANHOS (venda fechada). Afeta métricas e relatórios; só reabre com restaurar_negocios.",
+    description: "ESCREVE NO CRM: marca negócios como GANHOS (venda fechada). Afeta métricas e relatórios; só reabre com restaurar_negocios. ATENÇÃO: ainda NÃO testada no Datacrazy real; confirme com o usuário e prefira testar antes com um negócio de teste.",
     method: "POST",
     path: "/api/v1/businesses/actions/win",
     shape: { ids },
@@ -162,7 +162,7 @@ export const WRITE_TOOLS: WriteToolDef[] = [
   },
   {
     name: "perder_negocios",
-    description: "ESCREVE NO CRM: marca negócios como PERDIDOS, com motivo (veja buscar_motivos_de_perda). Afeta métricas; só reabre com restaurar_negocios.",
+    description: "ESCREVE NO CRM: marca negócios como PERDIDOS, com motivo (veja buscar_motivos_de_perda). Afeta métricas; só reabre com restaurar_negocios. ATENÇÃO: ainda NÃO testada no Datacrazy real; confirme com o usuário e prefira testar antes com um negócio de teste.",
     method: "POST",
     path: "/api/v1/businesses/actions/lose",
     shape: { ids, lossReasonId: id.describe("Motivo de perda"), justification: z.string().max(500).optional() },
@@ -171,7 +171,7 @@ export const WRITE_TOOLS: WriteToolDef[] = [
   },
   {
     name: "restaurar_negocios",
-    description: "ESCREVE NO CRM: restaura negócios ganhos ou perdidos, voltando a ficar em andamento.",
+    description: "ESCREVE NO CRM: restaura negócios ganhos ou perdidos, voltando a ficar em andamento. ATENÇÃO: ainda NÃO testada no Datacrazy real; confirme com o usuário e prefira testar antes com um negócio de teste.",
     method: "POST",
     path: "/api/v1/businesses/actions/restore",
     shape: { ids },

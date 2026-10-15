@@ -91,7 +91,7 @@ if (allowSend) {
     "finalizar_atendimento",
     {
       description:
-        "ESCREVE NO CRM: finaliza o atendimento de uma conversa. Pode disparar automações do Datacrazy configuradas para o fim do atendimento (ex.: pesquisa de satisfação ao cliente). Só com pedido explícito do usuário.",
+        "ESCREVE NO CRM: finaliza o atendimento de uma conversa. Pode disparar automações do Datacrazy configuradas para o fim do atendimento (ex.: pesquisa de satisfação ao cliente). Só com pedido explícito do usuário. ATENÇÃO: ainda NÃO testada no Datacrazy real.",
       inputSchema: SHAPES.finalizar,
       annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: true, openWorldHint: true },
     },
