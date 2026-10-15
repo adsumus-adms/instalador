@@ -1,0 +1,9 @@
+{
+  "mcpServers": {
+    "datacrazy": {
+      "command": "sh",
+      "args": ["datacrazy-mcp/nuvem.sh"],
+      "env": { "DATACRAZY_SOMENTE_LEITURA": "1" }
+    }
+  }
+}
