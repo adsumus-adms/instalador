@@ -5,7 +5,7 @@ import json
 from datetime import date, timedelta
 
 CORTE = date(2023, 1, 1)
-ALFA_INI = date(2022, 12, 23)
+ALFA_INI = date(2023, 12, 23)
 ALFA_FIM1 = date(2024, 12, 22)
 
 

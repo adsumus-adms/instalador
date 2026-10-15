@@ -38,7 +38,7 @@ python3 scripts/ciclos.py --cr-emissao AAAA-MM-DD --declaracao AAAA-MM-DD
 ```
 
 Regras (informadas pelo usuário):
-- **CR emitido antes de 01/01/2023, padrão ALFA**: primeiro ciclo de **23/12/2022 a 22/12/2024**. Ciclos seguintes: de 12 em 12 meses a partir de 23/12/2024 (premissa, confirme com o usuário se o caso chegar a esse ponto).
+- **CR emitido antes de 01/01/2023, padrão ALFA**: ciclos fixos de 1 ano. Ciclo 1: **23/12/2023 a 22/12/2024**; ciclo 2: **23/12/2024 a 22/12/2025**; ciclo 3: **23/12/2025 até a data da declaração** (em aberto). Treinos anteriores a 23/12/2023 ficam fora dos ciclos: liste-os à parte, sem contá-los.
 - **CR emitido em 01/01/2023 ou depois, padrão BRAVO**: ciclos de **12 em 12 meses a partir da data de emissão do CR**, até a data em que a declaração será emitida (o último ciclo pode estar em aberto/parcial; sinalize).
 
 Se a data de emissão do CR não estiver no sistema, o usuário informará no pedido. Sem ela, pergunte.
