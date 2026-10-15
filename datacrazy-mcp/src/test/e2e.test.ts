@@ -69,7 +69,7 @@ test("escrita: método, rota e corpo corretos; ferramentas sinalizadas como não
   await client.callTool({ name: "criar_lead", arguments: { name: "Fulano", phone: "5583999999999", attendantId: "att1" } });
   await client.callTool({ name: "atualizar_lead", arguments: { id: "L1", email: "a@b.com" } });
   await client.callTool({ name: "adicionar_comentario_ao_lead", arguments: { leadId: "L1", note: "ligou" } });
-  await client.callTool({ name: "criar_atividade", arguments: { title: "Retornar", leadId: "L1", activityTypeId: "T1", startDate: "2026-10-20T14:00:00.000Z" } });
+  await client.callTool({ name: "criar_atividade", arguments: { title: "Retornar", leadId: "L1", activityTypeId: "T1", startDate: "2026-10-20T14:00:00.000Z", endDate: "2026-10-20T15:00:00.000Z" } });
   await client.callTool({ name: "mover_negocios", arguments: { ids: ["B1", "B2"], destinationStageId: "S2" } });
   await client.callTool({ name: "perder_negocios", arguments: { ids: ["B1"], lossReasonId: "R1", justification: "sem interesse" } });
 
@@ -86,7 +86,7 @@ test("escrita: método, rota e corpo corretos; ferramentas sinalizadas como não
   assert.deepEqual(JSON.parse(seen[0].body), { name: "Fulano", phone: "5583999999999", attendant: { id: "att1" } });
   assert.deepEqual(JSON.parse(seen[1].body), { email: "a@b.com" }); // sem o id no corpo
   assert.deepEqual(JSON.parse(seen[2].body), { note: "ligou" });
-  assert.deepEqual(JSON.parse(seen[3].body), { title: "Retornar", lead: { id: "L1" }, activityType: { id: "T1" }, startDate: "2026-10-20T14:00:00.000Z" });
+  assert.deepEqual(JSON.parse(seen[3].body), { title: "Retornar", lead: { id: "L1" }, activityType: { id: "T1" }, startDate: "2026-10-20T14:00:00.000Z", endDate: "2026-10-20T15:00:00.000Z" });
   assert.deepEqual(JSON.parse(seen[4].body), { ids: ["B1", "B2"], destinationStageId: "S2" });
   assert.deepEqual(JSON.parse(seen[5].body), { ids: ["B1"], lossReasonId: "R1", justification: "sem interesse" });
 
@@ -128,5 +128,24 @@ test("DATACRAZY_AUTH_VIA_PROXY=1: não envia Authorization e dispensa a chave", 
   assert.ok(!r.isError);
   assert.equal(seen.length, 1);
   assert.equal(seen[0].auth, undefined);
+  await close();
+});
+
+test("criar_atividade exige início e fim; erro com trace aponta só o campo ausente (sem vazar o trace)", async () => {
+  const { seen, client, close } = await setup({}, (req, res) => {
+    if (req.method === "POST") {
+      res.writeHead(400, { "content-type": "application/json" }).end(JSON.stringify({ message: { statusCode: 500, message: "Internal server error", trace: "PrismaClientValidationError ... leadId: \"dado-sensivel\" ... Argument `endDate` is missing.\n at x" } }));
+      return true;
+    }
+    return false;
+  });
+  const call = async (name: string, args: Record<string, unknown>): Promise<any> => client.callTool({ name, arguments: args });
+  const sem = await call("criar_atividade", { title: "x", leadId: "L1", startDate: "2026-10-20T14:00:00.000Z" });
+  assert.ok(sem.isError);
+  assert.equal(seen.length, 0, "sem endDate nem chama a API");
+  const r = await call("criar_atividade", { title: "x", leadId: "L1", startDate: "2026-10-20T14:00:00.000Z", endDate: "2026-10-20T15:00:00.000Z" });
+  assert.ok(r.isError);
+  assert.match(r.content[0].text, /campo obrigatório ausente: endDate/);
+  assert.ok(!/dado-sensivel|Prisma/.test(r.content[0].text), "não vaza o trace");
   await close();
 });

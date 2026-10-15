@@ -54,8 +54,6 @@ function activityBody(a: Record<string, any>) {
 
 const activityFields = {
   description: z.string().max(2000).optional(),
-  startDate: date.optional(),
-  endDate: date.optional(),
   required: z.boolean().optional().describe("Atividade obrigatória?"),
   businessId: id.optional().describe("Negócio a vincular"),
   attendantId: id.optional().describe("Atendente responsável"),
@@ -101,7 +99,14 @@ export const WRITE_TOOLS: WriteToolDef[] = [
     description: "ESCREVE NO CRM: cria uma atividade (tarefa) vinculada a um lead. Não envia nada ao cliente.",
     method: "POST",
     path: "/api/v1/activities",
-    shape: { title: z.string().min(1).max(200).describe("Título da atividade"), leadId: id.describe("Lead vinculado"), ...activityFields },
+    // endDate é obrigatório na API real (confirmado em teste: sem ele dá erro 400), embora o OpenAPI não marque.
+    shape: {
+      title: z.string().min(1).max(200).describe("Título da atividade"),
+      leadId: id.describe("Lead vinculado"),
+      startDate: date.describe("Início"),
+      endDate: date.describe("Fim (obrigatório na API)"),
+      ...activityFields,
+    },
     modifiesExisting: false,
     toBody: activityBody,
   },
@@ -110,7 +115,7 @@ export const WRITE_TOOLS: WriteToolDef[] = [
     description: "ESCREVE NO CRM: altera uma atividade EXISTENTE (só os campos informados).",
     method: "PATCH",
     path: "/api/v1/activities/{id}",
-    shape: { id, title: z.string().min(1).max(200).optional(), leadId: id.optional(), ...activityFields },
+    shape: { id, title: z.string().min(1).max(200).optional(), leadId: id.optional(), startDate: date.optional(), endDate: date.optional(), ...activityFields },
     pathParams: ["id"],
     modifiesExisting: true,
     toBody: activityBody,

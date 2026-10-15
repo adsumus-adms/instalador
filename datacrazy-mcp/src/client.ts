@@ -69,13 +69,24 @@ export async function apiRequest(method: Method, path: string, query: Query = {}
 
 export const apiGet = (path: string, query: Query = {}) => apiRequest("GET", path, query);
 
-/** Mensagem curta de erro. Em erro 4xx de escrita inclui o `message` da API (validação de campos), cortado. */
+/**
+ * Mensagem curta de erro. Em erro 4xx de escrita inclui o `message` da API (validação de campos), cortado.
+ * A API às vezes devolve `message` como objeto com um `trace` interno: dele só aproveitamos o campo que falta
+ * (nunca o trace inteiro, que pode conter dados).
+ */
 async function errorMessage(res: Response, method: Method, path: string): Promise<string> {
   const base = `Erro da API Datacrazy: HTTP ${res.status} em ${method} ${path}`;
   if (method === "GET" || res.status >= 500) return base;
   try {
     const m = ((await res.json()) as { message?: unknown }).message;
-    const text = Array.isArray(m) ? m.join("; ") : typeof m === "string" ? m : "";
+    let text = "";
+    if (Array.isArray(m)) text = m.join("; ");
+    else if (typeof m === "string") text = m;
+    else if (m && typeof m === "object") {
+      const o = m as { message?: unknown; trace?: unknown };
+      const missing = typeof o.trace === "string" ? /Argument `(\w+)` is missing/.exec(o.trace)?.[1] : undefined;
+      text = missing ? `campo obrigatório ausente: ${missing}` : typeof o.message === "string" ? o.message : "";
+    }
     return text ? `${base}: ${text.slice(0, 300)}` : base;
   } catch {
     return base;

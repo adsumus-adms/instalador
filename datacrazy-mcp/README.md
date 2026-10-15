@@ -61,6 +61,8 @@ Todas começam com "ESCREVE NO CRM" na descrição e são marcadas como não som
 | `mover_negocios` | Muda a etapa (pode disparar automações da etapa de destino) |
 | `ganhar_negocios`, `perder_negocios`, `restaurar_negocios` | Fecha como ganho / perdido (com motivo) / reabre |
 
+**Testado no Datacrazy real (lead de teste, sem telefone):** `criar_lead`, `atualizar_lead` (só os campos enviados mudam), `adicionar_comentario_ao_lead`, `criar_atividade` e `atualizar_atividade`. O teste achou que a API exige `endDate` em atividades (o OpenAPI não marca); a ferramenta agora exige início e fim. **Ainda não testados no real:** tags/listas em `atualizar_lead` (substitui ou soma?) e todas as ferramentas de negócio (`criar_negocio`, `mover_negocios`, `ganhar_negocios`, `perder_negocios`, `restaurar_negocios`), que podem disparar automações do funil.
+
 Limites de segurança: no máximo 20 negócios por chamada, IDs validados, entradas inválidas são recusadas antes de chamar a API.
 
 Para usar só leitura, defina `DATACRAZY_SOMENTE_LEITURA=1` (as ferramentas de escrita nem são registradas):
