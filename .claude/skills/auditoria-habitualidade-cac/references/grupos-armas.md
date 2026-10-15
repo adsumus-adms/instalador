@@ -18,7 +18,7 @@ Grupos (definidos pelo usuário conforme a legislação em vigor):
 4. **Uso permitido ou restrito?** Depende do calibre/energia conforme a regulamentação vigente (Decreto nº 11.615/2023 e normas do Exército).
 
 ## Pontos a conferir (confirme na norma vigente antes de afirmar)
-- Armas curtas: calibres de uso permitido costumam ser os até .38 e 9x19mm; calibres maiores (.40, .45 etc.) tendem a ser restritos.
+- Armas curtas: uso permitido até o calibre .38; 9x19mm, .40 e .45 são tratados como uso restrito pelo Decreto nº 11.615/2023 (a declaração do clube já classifica 9x19mm como "restrita de porte"). Confirme na norma vigente.
 - Armas longas raiadas: o limite entre permitido e restrito costuma depender da energia na boca do cano e do calibre (.22 LR é permitido; calibres de fuzil como .223 e .308 tendem a ser restritos).
 - Estes pontos são orientação, não substituem a norma. Se houver dúvida sobre uma arma específica, registre como **pendência** e pergunte ao usuário.
 
