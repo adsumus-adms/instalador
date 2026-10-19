@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(curl -sS -m 30 -X POST https://api.g1.datacrazy.io/api/v1/tags *)",
+      "Bash(curl -sS -m 30 -X POST https://api.g1.datacrazy.io/api/v1/business-loss-reasons *)",
+      "Bash(curl -sS -m 30 -X DELETE https://api.g1.datacrazy.io/api/v1/tags/*)"
+    ]
+  }
+}
