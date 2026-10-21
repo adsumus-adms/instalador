@@ -63,16 +63,19 @@ Confira também: arma/grupo informados no lançamento versus o grupo da arma (pa
 
 Leia `references/exigencias.md`. Regra atual: cada ciclo precisa de 8 treinamentos registrados. Para cada ciclo, informe quantos treinos estão confirmados nos três documentos, se cumpre os 8 e, no ciclo em aberto, quantos faltam. Não invente exigências além das que estão no arquivo.
 
-## Saída: relatório de divergências
+## Saída: quadro para baixar e compartilhar
 
-Salve em arquivo (Markdown; gere `.xlsx` com a skill `xlsx` se o usuário preferir planilha) e resuma no chat. Estrutura:
+A entrega principal é uma **planilha .xlsx** com 3 abas (Resumo, Dia a dia, Pendências), pronta para baixar e compartilhar. Gere-a com o script, que mantém o layout sempre igual:
 
-1. **Identificação**: CAC, CR, data de emissão, padrão (ALFA/BRAVO), data da declaração.
-2. **Armas e grupos**: tabela arma → grupo (com pendências).
-3. **Ciclos**: lista com início e fim.
-4. **Resumo por ciclo**: dias no sistema, dias nas folhas, dias na declaração, e divergências.
-5. **Tabela detalhada** dia a dia (Sistema × Folha × Declaração × Situação).
-6. **Conclusão**: a declaração está de acordo ou não, citando os dias que causam a diferença.
-7. **Pendências e limitações**: itens ilegíveis, dados faltantes, premissas adotadas.
+1. Monte um JSON conforme `references/quadro-schema.md` (sem CPF: o quadro será compartilhado).
+2. Rode `python3 -I scripts/gerar_quadro.py entrada.json Habitualidade-NOME-DO-CAC.xlsx`.
+3. Entregue o arquivo ao usuário com a ferramenta de envio de arquivos e resuma no chat em poucas linhas: conclusão por ciclo e as pendências principais.
 
-Seja objetivo e cite sempre a fonte (arquivo e página) de cada achado, para que a conferência humana seja rápida. Este relatório é apoio à conferência; a responsabilidade pela declaração continua com o clube e o CAC.
+Conteúdo do quadro:
+1. **Resumo**: identificação (CAC, CR, padrão ALFA/BRAVO, data da declaração, situação da análise), tabela por ciclo (início, fim, treinos confirmados, meta de 8, cumpre sim/não/a confirmar, observação) e tabela de armas com grupo.
+2. **Dia a dia**: cada treino com Sistema × Folha × Declaração × Situação e a fonte (arquivo e página).
+3. **Pendências**: divergências, itens ilegíveis, dados faltantes e premissas.
+
+Se a análise for parcial (faltam folhas ou sistema), diga isso no campo "Situação da análise" e use "Não verificado" nas colunas correspondentes, em vez de deixar em branco ou presumir. "Cumpre?" só vale "Sim" quando os três documentos confirmam o treino.
+
+Seja objetivo e cite sempre a fonte de cada achado. O quadro é apoio à conferência; a responsabilidade pela declaração continua com o clube e o CAC.
