@@ -69,6 +69,14 @@ def main():
     ws.sheet_view.showGridLines = False
     titulo(ws, "Habitualidade: " + cac["nome"], 7)
     r = 3
+    if cac.get("alerta"):
+        ws.merge_cells(start_row=r, start_column=1, end_row=r, end_column=7)
+        c = ws.cell(row=r, column=1, value="ALERTA: " + cac["alerta"])
+        c.font = Font(name=FONTE, bold=True, size=10, color="8A1C1C")
+        c.fill = FILL["nao"]
+        c.alignment = Alignment(wrap_text=True, vertical="top")
+        ws.row_dimensions[r].height = 62
+        r += 2
     for rot, chave in [("CR", "cr"), ("Emissão do CR", "emissao_cr"), ("Padrão", "padrao"),
                        ("Filiação", "filiacao"), ("Data da declaração analisada", "declaracao_data"),
                        ("Situação da análise", "status_analise")]:
@@ -100,16 +108,16 @@ def main():
     # Aba 2: Detalhe dia a dia
     ws2 = wb.create_sheet("Dia a dia")
     ws2.sheet_view.showGridLines = False
-    titulo(ws2, "Sistema × Folha × Declaração", 9)
+    titulo(ws2, "Sistema × Folha × Declaração", 12)
     cabecalho(ws2, 3, ["Ciclo", "Data", "Sigma", "Calibre", "Qtd munição", "Evento",
-                       "Sistema", "Folha", "Declaração", "Situação", "Fonte"][:11])
+                       "Sistema", "Folha", "Declaração", "Lançado no sistema em", "Situação", "Fonte"])
     r = 3
     for x in d.get("detalhe", []):
         r += 1
         linha(ws2, r, [x.get("ciclo", ""), x["data"], x.get("sigma", ""), x.get("calibre", ""),
                        x.get("qtd", ""), x.get("evento", ""), x.get("sistema", ""), x.get("folha", ""),
-                       x.get("declaracao", ""), x.get("situacao", ""), x.get("fonte", "")])
-    larguras(ws2, [10, 18, 12, 11, 12, 18, 14, 14, 14, 30, 26])
+                       x.get("declaracao", ""), x.get("lancamento", ""), x.get("situacao", ""), x.get("fonte", "")])
+    larguras(ws2, [8, 18, 11, 10, 10, 18, 13, 22, 20, 16, 38, 24])
     ws2.freeze_panes = "A4"
 
     # Aba 3: Pendências

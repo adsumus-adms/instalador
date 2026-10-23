@@ -5,9 +5,11 @@ description: Audita a habitualidade de um CAC (Colecionador, Atirador Desportivo
 
 # Auditoria de habitualidade de CAC
 
-Objetivo: dizer, com evidências, se a **declaração de habitualidade** emitida pelo sistema do clube reflete os dias em que o CAC realmente compareceu. A fonte da verdade é a **folha de assinatura** (assinatura do próprio CAC); o **sistema** é o que foi lançado; a **declaração** é o que será apresentado ao Exército. Divergência entre os três pode invalidar a habitualidade, por isso o relatório deve ser preciso e rastreável, sem presumir nada que o documento não mostre.
+Objetivo: dizer, com evidências, se a **declaração de habitualidade** emitida pelo sistema do clube reflete os dias em que o CAC realmente compareceu. A fonte da verdade é a **folha de assinatura** (assinatura do próprio CAC); o **sistema** é o que foi lançado; a **declaração** é o que será apresentado à autoridade (Exército ou Polícia Federal). Divergência entre os três pode invalidar a habitualidade, por isso o relatório deve ser preciso e rastreável, sem presumir nada que o documento não mostre.
 
 ## Entradas
+
+Se o CAC anexar uma **decisão, notificação ou processo da Polícia Federal/Exército** (cancelamento de CR, indeferimento), trate como urgente: destaque o prazo de defesa no campo `alerta` do quadro e confronte o que a autoridade contou com o que as folhas e a declaração mostram. Registros só podem ser corrigidos com base no fato real (qual arma foi usada), com o motivo anotado; nunca ajuste dados só para atingir o mínimo.
 
 1. **Registros do sistema** do CAC (lançamentos de presença/treino): normalmente tabela ou dados colados/consultados no sistema.
 2. **Folhas de assinatura**: PDF ou foto escaneada. Podem ter assinatura manuscrita e data escrita à mão.
@@ -43,6 +45,8 @@ Regras (informadas pelo usuário):
 
 Se a data de emissão do CR não estiver no sistema, o usuário informará no pedido. Sem ela, pergunte.
 
+Atenção: decisões reais da Polícia Federal já contaram o ciclo de **27/12 a 26/12**. Se o CAC tiver decisão, notificação ou outro documento oficial com o ciclo, use-o e avise a diferença para o ciclo ALFA acima.
+
 ## Passo 3: Cruzar os três conjuntos
 
 Para cada ciclo e cada data, monte a matriz **Sistema × Folha × Declaração** e classifique:
@@ -61,7 +65,7 @@ Confira também: arma/grupo informados no lançamento versus o grupo da arma (pa
 
 ## Passo 4: Avaliar a exigência por grupo e ciclo
 
-Leia `references/exigencias.md`. Regra atual: cada ciclo precisa de 8 treinamentos registrados. Para cada ciclo, informe quantos treinos estão confirmados nos três documentos, se cumpre os 8 e, no ciclo em aberto, quantos faltam. Não invente exigências além das que estão no arquivo.
+Leia `references/exigencias.md`. Regra atual: cada ciclo precisa de 8 treinamentos registrados **por arma representativa de cada tipo de arma** do CAC (veja o arquivo). Para cada ciclo, informe quantos treinos estão confirmados nos três documentos, se cumpre os 8 e, no ciclo em aberto, quantos faltam. Não invente exigências além das que estão no arquivo.
 
 ## Saída: quadro para baixar e compartilhar
 

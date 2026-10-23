@@ -32,3 +32,10 @@ Cada linha traz: ordem, data-hora, **Sigma** da arma, calibre, quantidade de mun
 - **Mesmo dia, dois calibres/armas** na folha: a declaração pode trazer só um. Confirme se é um treino ou dois.
 - Cabeçalho da folha com **CR e filiação em branco** (modelos antigos): registre.
 - Horário ou quantidade que difere por pouco entre folha e declaração: se a foto estiver ambígua, marque "leitura incerta".
+
+## Campos e defeitos vistos em declarações mais novas
+- Bloco **"Registros da Habitualidade"**: para cada evento traz o sistema de origem (ex.: Tiro Digital), o número do registro e a **data do lançamento**. Compare a data do lançamento com a data do evento: lançamentos feitos muito depois (meses ou mais de um ano) devem ir para as pendências, e a folha assinada passa a ser a prova principal.
+- Campo de validade do CR pode vir sem preencher, com o texto cru do modelo (`{pessoa.documento.crValidade.date}`). Aponte como defeito da declaração.
+- O nome na declaração pode divergir do CR (letra a menos ou a mais). Compare sempre com o CR e com documentos oficiais.
+- O mesmo Sigma pode aparecer em CACs diferentes (arma do clube ou cadastro genérico). Aponte para conferência.
+- As decisões da Polícia Federal contam o ciclo a partir de 27/12 (ex.: 27/12/2024 a 26/12/2025), e não de 23/12. Confirme com o usuário qual regra de ciclo vale; compare se algum treino cai entre 23 e 26/12.
