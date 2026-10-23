@@ -5,8 +5,7 @@ import json
 from datetime import date, timedelta
 
 CORTE = date(2023, 1, 1)
-ALFA_INI = date(2023, 12, 23)
-ALFA_FIM1 = date(2024, 12, 22)
+ALFA_INI = date(2023, 12, 27)
 
 
 def add_anos(d, n):
@@ -39,7 +38,7 @@ def main():
     a = p.parse_args()
     cr, decl = date.fromisoformat(a.cr_emissao), date.fromisoformat(a.declaracao)
     if cr < CORTE:
-        padrao, lista = "ALFA", ciclos(ALFA_INI, decl, ALFA_FIM1)
+        padrao, lista = "ALFA", ciclos(ALFA_INI, decl)
     else:
         padrao, lista = "BRAVO", ciclos(cr, decl)
     print(json.dumps({"padrao": padrao, "cr_emissao": cr.isoformat(),
