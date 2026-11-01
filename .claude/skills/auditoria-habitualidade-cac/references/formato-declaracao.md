@@ -39,3 +39,10 @@ Cada linha traz: ordem, data-hora, **Sigma** da arma, calibre, quantidade de mun
 - O nome na declaração pode divergir do CR (letra a menos ou a mais). Compare sempre com o CR e com documentos oficiais.
 - O mesmo Sigma pode aparecer em CACs diferentes (arma do clube ou cadastro genérico). Aponte para conferência.
 - Os ciclos ALFA são os da Polícia Federal (27/12 a 26/12), confirmados pelo usuário.
+
+## Contagem: linhas × dias distintos
+- O resumo da declaração conta **linhas** (cada arma e cada lançamento é uma linha), e uma única ida ao clube pode gerar dezenas de linhas (várias armas, vários lançamentos no mesmo minuto). A regra da PF fala em **eventos distintos**: conte **dias distintos** por grupo e por ciclo, e mostre também o número de linhas.
+- Para declarações grandes (centenas de linhas), extraia com `pdftotext -layout` e processe com um script (agrupe por bloco, Sigma, data e ciclo) em vez de contar à mão.
+- **Todos os treinos do ciclo antes da data de filiação** da declaração: aponte como risco (pode haver filiação anterior ou transferência).
+- **Mesma arma (mesmo Sigma) em dois blocos** (classificada e "Indeterminado"): aponte a inconsistência e mostre a contagem com e sem a correção.
+- **Várias armas no mesmo dia em poucos minutos** ou **muitas linhas com o mesmo horário**: pode indicar lançamento em lote; conferir com a folha.
