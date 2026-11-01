@@ -24,3 +24,7 @@ Grupos (definidos pelo usuário conforme a legislação em vigor):
 
 ## Entrada necessária por arma
 Marca/modelo, calibre, tipo (pistola, revólver, carabina, espingarda…), alma (raiada/lisa), funcionamento (repetição/semiautomática). Quando o sistema não trouxer, o usuário informará no pedido.
+
+## A classificação muda com o tempo
+- A classificação (permitido/restrito) de uma arma pode mudar por norma. Classifique cada treino pela **data do treino**, não só pela data de hoje.
+- Exemplo informado pelo usuário: o rifle .22 semiautomático era de uso **restrito até 30/12/2024** (grupo 3) e passou a **permitido** depois (grupo 4). Antes dessa data, não há exigência de treinos no grupo 4 por causa dessa arma. Peça a norma ao usuário para citá-la no relatório.
