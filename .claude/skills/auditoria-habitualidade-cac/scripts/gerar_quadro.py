@@ -97,13 +97,13 @@ def main():
     r += 2
     ws.cell(row=r, column=1, value="Armas").font = Font(name=FONTE, bold=True, size=11, color=AZUL)
     r += 1
-    cabecalho(ws, r, ["Sigma", "Calibre", "Classificação na declaração", "Grupo (1 a 6)", "Eventos", "", "Observação"])
+    cabecalho(ws, r, ["Sigma", "Calibre", "Classificação na declaração", "Grupo (1 a 6)", "Eventos", "CRAF / Sigma", "Observação"])
     ws.row_dimensions[r].height = 30
     for a in d.get("armas", []):
         r += 1
         linha(ws, r, [a.get("sigma", ""), a.get("calibre", ""), a.get("classificacao", ""),
-                      a.get("grupo", ""), a.get("eventos", ""), "", a.get("obs", "")])
-    larguras(ws, [30, 14, 24, 20, 14, 14, 60])
+                      a.get("grupo", ""), a.get("eventos", ""), a.get("craf", ""), a.get("obs", "")])
+    larguras(ws, [30, 14, 24, 20, 14, 22, 60])
 
     # Aba 2: Detalhe dia a dia
     ws2 = wb.create_sheet("Dia a dia")

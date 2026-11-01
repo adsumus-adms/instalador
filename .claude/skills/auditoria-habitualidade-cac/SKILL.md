@@ -20,7 +20,7 @@ Para PDFs e imagens, use a skill `pdf` e leia as imagens visualmente. Em folhas 
 
 ## Passo 1: Classificar as armas em grupos
 
-Leia `references/grupos-armas.md`. Para cada arma do CAC (modelo, calibre, tipo, ação), atribua um dos 6 grupos:
+Leia `references/grupos-armas.md`. Se houver CRAFs ou GTs anexados, leia também `references/conferencia-craf.md`. Para cada arma do CAC (modelo, calibre, tipo, ação), atribua um dos 6 grupos:
 
 1. Armas curtas de uso permitido
 2. Armas curtas de uso restrito
