@@ -27,4 +27,4 @@ Marca/modelo, calibre, tipo (pistola, revólver, carabina, espingarda…), alma 
 
 ## A classificação muda com o tempo
 - A classificação (permitido/restrito) de uma arma pode mudar por norma. Classifique cada treino pela **data do treino**, não só pela data de hoje.
-- Exemplo informado pelo usuário: o rifle .22 semiautomático era de uso **restrito até 30/12/2024** (grupo 3) e passou a **permitido** depois (grupo 4). Antes dessa data, não há exigência de treinos no grupo 4 por causa dessa arma. Peça a norma ao usuário para citá-la no relatório.
+- Exemplo informado pelo usuário: o rifle .22 semiautomático era de uso **restrito até 30/12/2024** (grupo 3) e passou a **permitido** depois (grupo 4). Antes dessa data, não há exigência de treinos no grupo 4 por causa dessa arma. Norma confirmada: **Decreto nº 12.345, de 30/12/2024** (altera o Decreto 11.615/2023; art. 11, inciso IV: armas de fogo portáteis, longas, de alma raiada, semiautomáticas, de calibre nominal igual ou inferior a .22 Long Rifle; em vigor na publicação, DOU de 31/12/2024). Cite o decreto no relatório.
