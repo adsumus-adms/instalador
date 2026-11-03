@@ -32,6 +32,16 @@ def cabecalho(ws, linha, titulos):
         c.border = BORDA
 
 
+VERM_FILL = PatternFill("solid", fgColor="F8D7D7")
+VERM_FONT = Font(name=FONTE, size=10, bold=True, color="B00020")
+
+
+def marca_vermelho(ws, r, col):
+    c = ws.cell(row=r, column=col)
+    c.fill = VERM_FILL
+    c.font = VERM_FONT
+
+
 def linha(ws, r, valores, status_col=None):
     for i, v in enumerate(valores, 1):
         c = ws.cell(row=r, column=i, value=v)
@@ -117,6 +127,8 @@ def main():
         linha(ws2, r, [x.get("ciclo", ""), x["data"], x.get("sigma", ""), x.get("calibre", ""),
                        x.get("qtd", ""), x.get("evento", ""), x.get("sistema", ""), x.get("folha", ""),
                        x.get("declaracao", ""), x.get("lancamento", ""), x.get("situacao", ""), x.get("fonte", "")])
+        if x.get("corrigir"):
+            marca_vermelho(ws2, r, 11)
     larguras(ws2, [8, 18, 11, 10, 10, 18, 13, 22, 20, 16, 38, 24])
     ws2.freeze_panes = "A4"
 
@@ -128,7 +140,11 @@ def main():
     r = 3
     for i, p in enumerate(d.get("pendencias", []), 1):
         r += 1
-        linha(ws3, r, [i, p])
+        texto, corrigir = (p["texto"], p.get("corrigir")) if isinstance(p, dict) else (p, False)
+        linha(ws3, r, [i, ("CORRIGIR: " if corrigir else "") + texto])
+        if corrigir:
+            marca_vermelho(ws3, r, 2)
+            marca_vermelho(ws3, r, 1)
     larguras(ws3, [6, 110])
 
     for w in (ws, ws2, ws3):

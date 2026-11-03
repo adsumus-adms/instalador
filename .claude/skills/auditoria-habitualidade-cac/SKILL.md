@@ -65,19 +65,27 @@ Confira também: arma/grupo informados no lançamento versus o grupo da arma (pa
 
 Leia `references/exigencias.md`. Regra atual: cada ciclo precisa de 8 treinamentos registrados **por arma representativa de cada tipo de arma** do CAC (veja o arquivo). Para cada ciclo, informe quantos treinos estão confirmados nos três documentos, se cumpre os 8 e, no ciclo em aberto, quantos faltam. Não invente exigências além das que estão no arquivo.
 
-## Saída: quadro para baixar e compartilhar
+## Saída: planilha de apoio e relatório em PDF
 
-A entrega principal é uma **planilha .xlsx** com 3 abas (Resumo, Dia a dia, Pendências), pronta para baixar e compartilhar. Gere-a com o script, que mantém o layout sempre igual:
+São dois arquivos, gerados por scripts para o layout ser sempre o mesmo.
 
-1. Monte um JSON conforme `references/quadro-schema.md` (sem CPF: o quadro será compartilhado).
-2. Rode `python3 -I scripts/gerar_quadro.py entrada.json Habitualidade-NOME-DO-CAC.xlsx`.
-3. Entregue o arquivo ao usuário com a ferramenta de envio de arquivos e resuma no chat em poucas linhas: conclusão por ciclo e as pendências principais.
+**1. Planilha (.xlsx), para consulta e compartilhamento:** abas Resumo, Dia a dia e Pendências.
+1. Monte um JSON conforme `references/quadro-schema.md` (sem CPF).
+2. Rode `python3 -I scripts/gerar_quadro.py entrada.json Habitualidade-NOME.xlsx`.
 
-Conteúdo do quadro:
-1. **Resumo**: identificação (CAC, CR, padrão ALFA/BRAVO, data da declaração, situação da análise), tabela por ciclo (início, fim, treinos confirmados, meta de 8, cumpre sim/não/a confirmar, observação) e tabela de armas com grupo.
-2. **Dia a dia**: cada treino com Sistema × Folha × Declaração × Situação e a fonte (arquivo e página).
+**2. Relatório em PDF, para impressão e consulta de quem processa as declarações:** conclusão, resultado por grupo e ciclo, ações com caixa de conferência, armas × CRAF, o que está correto, normas e limitações, e o dia a dia em anexo.
+1. Monte um JSON conforme `references/relatorio-schema.md`.
+2. Rode `python3 -I scripts/gerar_relatorio_pdf.py entrada.json Relatorio-Habitualidade-NOME.pdf`.
+
+**Regra de cor, sempre:** tudo o que precisa ser **corrigido** vai em **vermelho**, com a palavra **CORRIGIR** (a cor some na impressão preto e branco; a palavra não). Isso vale para a planilha (célula vermelha em "Cumpre? = Não", dias e pendências com `corrigir`) e para o PDF. O que é só conferir ou anexar fica em preto, e "A confirmar" não é vermelho.
+
+Entregue os arquivos com a ferramenta de envio e resuma no chat em poucas linhas: conclusão por ciclo e as ações principais.
+
+Conteúdo da planilha:
+1. **Resumo**: identificação, tabela por ciclo (início, fim, treinos confirmados, meta de 8, cumpre sim/não/a confirmar, observação) e armas com grupo.
+2. **Dia a dia**: cada treino com Sistema × Folha × Declaração × Situação e a fonte.
 3. **Pendências**: divergências, itens ilegíveis, dados faltantes e premissas.
 
-Se a análise for parcial (faltam folhas ou sistema), diga isso no campo "Situação da análise" e use "Não verificado" nas colunas correspondentes, em vez de deixar em branco ou presumir. "Cumpre?" só vale "Sim" quando os três documentos confirmam o treino.
+Se a análise for parcial (faltam folhas ou sistema), diga isso no campo "Situação da análise" e use "Não verificado" nas colunas correspondentes. "Cumpre?" só vale "Sim" quando a declaração e a folha confirmam o treino.
 
-Seja objetivo e cite sempre a fonte de cada achado. O quadro é apoio à conferência; a responsabilidade pela declaração continua com o clube e o CAC.
+Seja objetivo e cite sempre a fonte de cada achado. O relatório é apoio à conferência; a responsabilidade pela declaração continua com o clube e o CAC.
