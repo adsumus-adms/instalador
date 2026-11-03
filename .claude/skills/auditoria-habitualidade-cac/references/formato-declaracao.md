@@ -46,3 +46,8 @@ Cada linha traz: ordem, data-hora, **Sigma** da arma, calibre, quantidade de mun
 - **Todos os treinos do ciclo antes da data de filiação** da declaração: aponte como risco (pode haver filiação anterior ou transferência).
 - **Mesma arma (mesmo Sigma) em dois blocos** (classificada e "Indeterminado"): aponte a inconsistência e mostre a contagem com e sem a correção.
 - **Várias armas no mesmo dia em poucos minutos** ou **muitas linhas com o mesmo horário**: pode indicar lançamento em lote; conferir com a folha.
+
+## Declarações mais novas: blocos por inciso
+- Os blocos passaram a ser separados por **tipo de arma (inciso e artigo)**, não só por "restrito/permitido": art. 11, inciso I (curta permitida, 11.1), III (longa lisa repetição, 11.3), IV (.22LR, 11.4) e art. 12, incisos III (curta restrita, 12.3), IV (longa raiada restrita, 12.4) e V (lisa semiauto restrita, 12.5). Leia o cabeçalho "Arma representativa do tipo previsto no inciso X, art. NN" de cada bloco para classificar. Um parser que só olha "permitido/restrito" erra o grupo.
+- **Armas que não constam nos CRAFs do CAC** (Sigma novo, calibre ou tipo que ele não possui) aparecendo em dias específicos indicam lançamento com **arma do clube** ou erro de Sigma. Compare com a folha: se a folha traz calibres diferentes dos declarados naquele dia, aponte como divergência grave e peça para esclarecer o que de fato aconteceu antes de reemitir. Não proponha ajustar o lançamento só para atingir o mínimo.
+- Uma declaração reemitida pode ter corrigido vários pontos e piorado outros. Compare sempre com a anterior (linhas por dia, Sigmas, blocos) antes de concluir.
